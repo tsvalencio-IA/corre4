@@ -1,44 +1,22 @@
-Olympikus Corre 4 — Sistema 3D e AR (Demo)
-==========================================
+CORRE 4 — SISTEMA 3D EXTRAÍDO E CORRIGIDO
 
-Este pacote demonstra um sistema de visualização 3D e realidade aumentada para o tênis **Olympikus Corre 4**. Foi construído para ser publicado no GitHub Pages ou em qualquer servidor web estático. Ao abrir `index.html` no navegador do celular (preferencialmente Android com Chrome), o visitante poderá:
+Arquivos principais:
+- index.html: tela principal no estilo do mockup, com 3D 360 e AR.
+- corre4.html: redireciona para index.html.
+- comparador.html: HTML comparador corrigido para carregar o GLB local.
+- models/corre4_vermelho_360.glb: modelo 3D extraído do pacote corre4_glb_3d_360.zip.
+- assets/: imagens de referência e miniaturas.
 
-* Girar e ampliar o modelo 3D do tênis.
-* Tocar no botão “Ver em Realidade Aumentada” para ativar o AR via WebXR/Scene Viewer.
-* Consultar fotos de referência do produto reais, incluídas na pasta `photos/`.
+O que foi corrigido:
+- O sistema não carrega mais o tênis branco remoto do demo.
+- O GLB local está em models/corre4_vermelho_360.glb.
+- A tela principal agora aponta direto para esse GLB.
+- O comparador.html também foi alterado para usar esse mesmo GLB local.
 
-Como funciona o modelo 3D
-------------------------
+Como subir no GitHub Pages:
+1. Envie tudo para o repositório mantendo as pastas.
+2. Abra index.html ou corre4.html.
+3. No celular, use Chrome/Android para testar o botão AR.
 
-O arquivo `models/corre-4-estilo-vermelho.glb` incluído neste pacote **não é genérico**. Ele foi construído manualmente a partir das fotos do tênis, reproduzindo a forma da entressola, cabedal, cadarços, língua e os detalhes de textura e da lateral “CORRE”.  Este GLB é, portanto, um modelo estilizado/desenhado que procura se aproximar do aspecto visual do **Olympikus Corre 4** sem recorrer a fotogrametria pesada.  Ao abrir a página, você verá esse modelo girando automaticamente e pode interagir com ele em 360° ou colocá‑lo em Realidade Aumentada.
-
-Para obter um resultado **ainda mais fiel**, você pode escanear o tênis real utilizando um aplicativo de fotogrametria como **Polycam** ou **KIRI Engine**. Esses apps capturam dezenas de fotos e geram modelos 3D em formatos como GLB/GLTF. Caso deseje substituir o modelo desenhado por um escaneado:
-
-1. Faça o escaneamento do tênis e exporte o modelo final em formato `.glb`.
-2. Renomeie o arquivo exportado para `corre-4-estilo-vermelho.glb`.
-3. Substitua o arquivo existente em `models/` pelo novo modelo.
-4. Reenvie a pasta completa para o GitHub Pages. O sistema passará a carregar o modelo escaneado na página e na Realidade Aumentada.
-
-Estrutura de pastas
--------------------
-
-```
-corre4-sistema-completo/
-  ├── index.html               # página principal com modelo 3D e AR
-  ├── models/
-  │   └── corre-4-estilo-vermelho.glb  # modelo 3D genérico (substitua pelo oficial)
-  ├── photos/
-  │   ├── top.jpg              # vista superior do tênis
-  │   ├── sole.jpg             # sola
-  │   ├── side1.jpg            # lateral interna
-  │   ├── side2.jpg            # lateral externa
-  │   └── back.jpg             # traseira
-  └── README.txt               # este arquivo de instruções
-```
-
-Limitações e considerações
---------------------------
-
-* O modelo GLB fornecido é um **modelo estilizado** construído manualmente a partir das fotos. Ele captura diversos elementos do design, mas não é uma fotogrametria milimétrica do produto. Para obter fidelidade visual absoluta, é indispensável substituir por um modelo escaneado.
-* A função de detecção de pé e encaixe automático em AR, implementada anteriormente com MediaPipe Pose, não está incluída nesta versão minimalista. Ela pode ser adicionada em scripts JavaScript caso você deseje avançar com o alinhamento automático do tênis no pé do usuário.
-* Ao publicar no GitHub Pages, lembre-se de ativar o HTTPS e utilizar um navegador compatível com WebXR para que o botão de Realidade Aumentada funcione corretamente.
+Observação técnica:
+Este GLB é um modelo 3D estilizado/desenhado do Corre 4, com visual vermelho, 360 e AR. Ele é um arquivo 3D real em GLB, não foto recortada. Para ficar milimétrico como scanner profissional, somente substituindo por um GLB de fotogrametria.
