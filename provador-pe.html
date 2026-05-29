@@ -1,107 +1,175 @@
 <!doctype html>
-<html lang="pt-BR"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Provador no Pé • Corre 4</title>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Provador IA no Pé • Corre 4</title>
+<meta name="theme-color" content="#07111f">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
-<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
-<script src="https://unpkg.com/three@0.158.0/examples/js/loaders/GLTFLoader.js"></script>
+<style>
+:root{--bg:#07111f;--panel:rgba(8,18,33,.82);--line:rgba(255,255,255,.13);--text:#eef5ff;--muted:#a9bbd2;--gold:#f6c95b;--green:#15c779;--red:#ff4055;--blue:#4aa3ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#050b14;color:var(--text);font-family:Montserrat,system-ui,Arial,sans-serif}.stage{position:fixed;inset:0;background:radial-gradient(circle at 50% 10%,#183354,#050b14 72%)}video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;transform:scaleX(1)}canvas#three{position:absolute;inset:0;width:100%;height:100%;touch-action:none;pointer-events:none}.scan{position:absolute;inset:10vh 8vw 18vh;border:2px dashed rgba(246,201,91,.55);border-radius:28px;box-shadow:0 0 0 9999px rgba(0,0,0,.16);pointer-events:none}.scan:after{content:'aponte para o pé inteiro';position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-size:12px;font-weight:900;color:#15120a;background:linear-gradient(#ffe074,#d7a915);padding:6px 12px;border-radius:999px;white-space:nowrap}.top{position:fixed;z-index:20;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:10px}.title{min-width:0}.title h1{margin:0;font-size:clamp(18px,5vw,30px);line-height:1;font-weight:950;letter-spacing:-.04em}.title p{margin:5px 0 0;color:#c2d4eb;font-size:12px;font-weight:800}.btn{border:0;border-radius:16px;background:#17263c;color:var(--text);font-family:inherit;font-weight:950;min-height:44px;padding:0 14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)}.btn:active{transform:scale(.98)}.btn.gold{background:linear-gradient(#ffe074,#d7a915);color:#15120a}.btn.green{background:linear-gradient(#19d486,#0b8f57);color:#fff}.btn.red{background:linear-gradient(#ff5368,#b7152d);color:#fff}.btn.small{min-height:38px;border-radius:13px;font-size:12px}.bottom{position:fixed;z-index:22;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));display:grid;gap:10px}.panel{border:1px solid var(--line);border-radius:22px;background:var(--panel);backdrop-filter:blur(16px);box-shadow:0 20px 60px rgba(0,0,0,.32);padding:12px}.row{display:flex;gap:8px;align-items:center;overflow:auto;padding-bottom:2px}.row::-webkit-scrollbar{display:none}.status{font-size:12px;line-height:1.35;color:#dce8f8;font-weight:800;margin:9px 2px 0}.status strong{color:#fff}.sliders{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ctl{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);border-radius:15px;padding:8px}.ctl span{display:block;color:#b8c9df;font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.05em}.ctl input{width:100%;accent-color:var(--gold)}.debug{display:none;white-space:pre-wrap;background:rgba(0,0,0,.38);border-radius:14px;padding:10px;margin-top:8px;color:#d7e5f8;font:11px/1.35 monospace;max-height:170px;overflow:auto}.debug.show{display:block}.loading{position:fixed;z-index:30;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 50% 30%,rgba(24,51,84,.96),rgba(5,11,20,.98));padding:22px;text-align:center}.loading .card{max-width:540px;border:1px solid var(--line);border-radius:26px;background:rgba(8,18,33,.75);padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.38)}.loading h2{margin:0 0 10px;font-size:28px}.loading p{margin:8px 0;color:#c8d8ea;font-size:14px;line-height:1.45}.loading .tips{text-align:left;background:rgba(0,0,0,.18);border-radius:16px;padding:12px;margin-top:12px;color:#dce8f8;font-size:12px;line-height:1.5}.hidden{display:none!important}@media(max-width:720px){.top{align-items:flex-start}.sliders{grid-template-columns:1fr 1fr}.row .btn{flex:0 0 auto}.panel{padding:10px}.scan{inset:13vh 7vw 29vh}.bottom{bottom:calc(8px + env(safe-area-inset-bottom))}}
+</style>
+<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
-<body class="ar-page">
-<div class="video-wrap">
+<body>
+<div class="stage">
   <video id="video" playsinline autoplay muted></video>
-  <canvas id="overlay"></canvas>
+  <canvas id="three"></canvas>
+  <div class="scan"></div>
 </div>
-<div class="top-ui"><h1>AR no pé • Corre 4</h1><a class="btn ghost" href="index.html">Voltar</a></div>
-<div class="ar-ui">
-  <div class="ar-panel">
-    <div class="ar-row">
-      <button class="green" id="startBtn">Iniciar câmera</button>
-      <button id="footBtn">Pé direito</button>
-      <button id="shotBtn">Foto</button>
-      <button class="gold" id="centerBtn">Centralizar</button>
+<div class="top">
+  <div class="title"><h1>IA no pé • Corre 4</h1><p>câmera + detecção + encaixe automático</p></div>
+  <button class="btn small" onclick="location.href='index.html'">Voltar</button>
+</div>
+<div id="intro" class="loading">
+  <div class="card">
+    <h2>Provador no pé</h2>
+    <p>Para funcionar, abra pelo <strong>link HTTPS do GitHub Pages</strong> no Chrome do celular e permita a câmera.</p>
+    <button id="startBig" class="btn green">Abrir câmera agora</button>
+    <div class="tips">
+      Se não abrir: use Chrome, não abra dentro de iframe/app, libere a permissão da câmera, e teste com o pé inteiro aparecendo na tela.
     </div>
-    <p class="note" id="status">Ao iniciar, a câmera tenta detectar tornozelo, calcanhar e ponta do pé. Se o navegador não liberar IA, o modo manual continua funcionando.</p>
   </div>
-  <div class="ar-panel">
-    <label>Escala <input id="scale" type="range" min="40" max="180" value="100"></label>
-    <label>Altura <input id="dy" type="range" min="-120" max="120" value="0"></label>
-    <label>Horizontal <input id="dx" type="range" min="-160" max="160" value="0"></label>
-    <label>Rotação <input id="rot" type="range" min="-80" max="80" value="0"></label>
+</div>
+<div class="bottom">
+  <div class="panel">
+    <div class="row">
+      <button id="startBtn" class="btn green">Iniciar câmera</button>
+      <button id="switchBtn" class="btn">Trocar câmera</button>
+      <button id="footBtn" class="btn">Pé direito</button>
+      <button id="centerBtn" class="btn gold">Centralizar</button>
+      <button id="shotBtn" class="btn">Foto</button>
+      <button id="debugBtn" class="btn small">Diagnóstico</button>
+    </div>
+    <div id="status" class="status">Aguardando câmera.</div>
+    <div id="debug" class="debug"></div>
+  </div>
+  <div class="panel">
+    <div class="sliders">
+      <label class="ctl"><span>Escala</span><input id="scale" type="range" min="30" max="230" value="115"></label>
+      <label class="ctl"><span>Altura</span><input id="dy" type="range" min="-220" max="220" value="10"></label>
+      <label class="ctl"><span>Horizontal</span><input id="dx" type="range" min="-220" max="220" value="0"></label>
+      <label class="ctl"><span>Rotação</span><input id="rot" type="range" min="-120" max="120" value="0"></label>
+    </div>
   </div>
 </div>
 <script type="module">
-import { PoseLandmarker, FilesetResolver } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22-rc.20250304';
-const video=document.getElementById('video'), canvas=document.getElementById('overlay'), statusEl=document.getElementById('status');
-const startBtn=document.getElementById('startBtn'), footBtn=document.getElementById('footBtn'), shotBtn=document.getElementById('shotBtn'), centerBtn=document.getElementById('centerBtn');
-const dx=document.getElementById('dx'), dy=document.getElementById('dy'), sc=document.getElementById('scale'), rot=document.getElementById('rot');
-let useRight=true, poseLandmarker=null, lastVideoTime=-1, model=null, autoOK=false;
+const $=id=>document.getElementById(id);
+const video=$('video'), canvas=$('three'), statusEl=$('status'), debug=$('debug'), intro=$('intro');
+const startBtn=$('startBtn'), startBig=$('startBig'), switchBtn=$('switchBtn'), footBtn=$('footBtn'), shotBtn=$('shotBtn'), centerBtn=$('centerBtn'), debugBtn=$('debugBtn');
+const dx=$('dx'), dy=$('dy'), sc=$('scale'), rot=$('rot');
+let stream=null, facing='environment', useRight=true, poseLandmarker=null, lastVideoTime=-1, model=null, autoReady=false, cameraReady=false, manualMode=true;
+function setStatus(txt,type=''){ statusEl.innerHTML=txt; statusEl.style.color=type==='err'?'#ffd3d9':type==='ok'?'#d9ffec':'#dce8f8'; }
+function diag(){
+  return [
+    'URL: '+location.href,
+    'protocol: '+location.protocol,
+    'isSecureContext: '+window.isSecureContext,
+    'navigator.mediaDevices: '+!!navigator.mediaDevices,
+    'getUserMedia: '+!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),
+    'userAgent: '+navigator.userAgent,
+    'GLTFLoader: '+!!(THREE&&THREE.GLTFLoader),
+    'modelo: models/corre4.glb'
+  ].join('\n');
+}
+debugBtn.onclick=()=>{ debug.textContent=diag(); debug.classList.toggle('show'); };
+footBtn.onclick=()=>{ useRight=!useRight; footBtn.textContent=useRight?'Pé direito':'Pé esquerdo'; };
+centerBtn.onclick=()=>{ dx.value=0; dy.value=10; rot.value=0; sc.value=115; };
+switchBtn.onclick=async()=>{ facing=facing==='environment'?'user':'environment'; await startCamera(); };
+shotBtn.onclick=()=>{
+  const out=document.createElement('canvas'); out.width=canvas.width; out.height=canvas.height; const c=out.getContext('2d');
+  if(video.videoWidth) c.drawImage(video,0,0,out.width,out.height); c.drawImage(canvas,0,0); const a=document.createElement('a'); a.download='corre4-provador-pe.png'; a.href=out.toDataURL('image/png'); a.click();
+};
+
 const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true, preserveDrawingBuffer:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
 const scene = new THREE.Scene();
 const camera = new THREE.OrthographicCamera(-innerWidth/2, innerWidth/2, innerHeight/2, -innerHeight/2, -1000, 1000);
-camera.position.z=10;
-scene.add(new THREE.HemisphereLight(0xffffff,0x223355,2.3));
-const light=new THREE.DirectionalLight(0xffffff,2); light.position.set(2,5,5); scene.add(light);
-const loader=new THREE.GLTFLoader();
-loader.load('models/corre4.glb', gltf=>{
-  model=gltf.scene; model.rotation.x = 0; model.rotation.y = Math.PI/2; model.rotation.z = 0; model.scale.setScalar(850); model.visible=false; scene.add(model);
-}, undefined, err=>{ statusEl.textContent='Erro ao carregar models/corre4.glb: '+err.message; });
-function resize(){
-  const w=innerWidth,h=innerHeight; renderer.setSize(w,h,false); camera.left=-w/2; camera.right=w/2; camera.top=h/2; camera.bottom=-h/2; camera.updateProjectionMatrix();
-}
+camera.position.z=20;
+scene.add(new THREE.HemisphereLight(0xffffff,0x223355,2.5));
+const light=new THREE.DirectionalLight(0xffffff,2.2); light.position.set(3,5,6); scene.add(light);
+function resize(){ const w=innerWidth,h=innerHeight; renderer.setSize(w,h,false); camera.left=-w/2; camera.right=w/2; camera.top=h/2; camera.bottom=-h/2; camera.updateProjectionMatrix(); }
 addEventListener('resize',resize); resize();
-footBtn.onclick=()=>{useRight=!useRight; footBtn.textContent=useRight?'Pé direito':'Pé esquerdo'};
-centerBtn.onclick=()=>{dx.value=0;dy.value=0;rot.value=0;sc.value=100};
-shotBtn.onclick=()=>{const a=document.createElement('a'); a.download='corre4-ar-pe.png'; a.href=canvas.toDataURL('image/png'); a.click();};
-startBtn.onclick=start;
-async function start(){
+new THREE.GLTFLoader().load('models/corre4.glb',gltf=>{
+  model=gltf.scene; model.visible=false; model.rotation.set(0,Math.PI/2,0); model.scale.setScalar(680); scene.add(model); setStatus('Modelo carregado. Clique em <strong>Iniciar câmera</strong>.');
+},undefined,e=>setStatus('Erro ao carregar <strong>models/corre4.glb</strong>: '+(e.message||e),'err'));
+
+async function getStream(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ throw new Error('Este navegador não liberou getUserMedia. Abra pelo HTTPS do GitHub Pages no Chrome/Safari, fora de iframe.'); }
+  const tries=[
+    {video:{facingMode:{ideal:facing},width:{ideal:1280},height:{ideal:720}},audio:false},
+    {video:{facingMode:facing},audio:false},
+    {video:true,audio:false}
+  ];
+  let lastErr;
+  for(const constraints of tries){
+    try{return await navigator.mediaDevices.getUserMedia(constraints);}catch(e){lastErr=e;}
+  }
+  throw lastErr||new Error('Nenhuma câmera disponível.');
+}
+async function startCamera(){
   try{
-    const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}, width:{ideal:1280}, height:{ideal:720}}, audio:false});
-    video.srcObject=stream; await video.play();
-    statusEl.textContent='Câmera ativa. Carregando detector de pose...';
-    try{
-      const vision=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22-rc.20250304/wasm');
-      poseLandmarker=await PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task'},runningMode:'VIDEO',numPoses:1});
-      autoOK=true; statusEl.textContent='Detector ativo. Aponte a câmera para o pé inteiro.';
-    }catch(e){autoOK=false; statusEl.textContent='Detector não carregou. Use ajuste manual com o tênis centralizado.';}
+    intro.classList.add('hidden'); setStatus('Solicitando permissão da câmera...');
+    if(!window.isSecureContext){ throw new Error('Página não está em contexto seguro. Use https:// do GitHub Pages.'); }
+    if(stream) stream.getTracks().forEach(t=>t.stop());
+    stream=await getStream();
+    video.srcObject=stream; await video.play(); cameraReady=true;
+    setStatus('Câmera ativa. Carregando detector IA do pé...','ok');
+    loadPoseDetector();
     requestAnimationFrame(loop);
-  }catch(e){statusEl.textContent='Câmera bloqueada: '+e.message;}
+  }catch(e){
+    intro.classList.remove('hidden');
+    setStatus('Câmera não abriu: <strong>'+friendlyError(e)+'</strong><br>Diagnóstico:<br><pre style="white-space:pre-wrap;margin:6px 0 0">'+diag()+'</pre>','err');
+  }
+}
+function friendlyError(e){ const name=e&&e.name?e.name:''; const msg=e&&e.message?e.message:String(e);
+  if(name==='NotAllowedError'||name==='PermissionDeniedError') return 'permissão negada. Libere câmera nas permissões do navegador.';
+  if(name==='NotFoundError'||name==='DevicesNotFoundError') return 'não encontrei câmera nesse aparelho/navegador.';
+  if(name==='NotReadableError') return 'a câmera está ocupada por outro app.';
+  if(name==='OverconstrainedError') return 'restrição de câmera incompatível; tente “Trocar câmera”.';
+  return msg;
+}
+startBtn.onclick=startCamera; startBig.onclick=startCamera;
+async function loadPoseDetector(){
+  if(poseLandmarker) return;
+  try{
+    const visionMod=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
+    const {PoseLandmarker, FilesetResolver}=visionMod;
+    const vision=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+    poseLandmarker=await PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task',delegate:'GPU'},runningMode:'VIDEO',numPoses:1,minPoseDetectionConfidence:.35,minTrackingConfidence:.35});
+    autoReady=true; manualMode=false; setStatus('IA carregada. Aponte para o pé inteiro: tornozelo, calcanhar e ponta do pé.','ok');
+  }catch(e){ autoReady=false; manualMode=true; setStatus('Câmera ativa, mas a IA não carregou pelo CDN. Modo manual liberado. Ajuste escala/posição/rotação.'); }
 }
 function pxToWorld(x,y){return [x-innerWidth/2, innerHeight/2-y];}
-function setModelFromPoints(heel, toe){
-  if(!model) return;
+function visibilityOK(p){ return !p || p.visibility===undefined || p.visibility>.18; }
+function placeByFoot(heel,toe,ankle){
+  if(!model || !heel || !toe) return false;
+  if(!visibilityOK(heel)||!visibilityOK(toe)) return false;
   const hx=heel.x*innerWidth, hy=heel.y*innerHeight, tx=toe.x*innerWidth, ty=toe.y*innerHeight;
-  const mx=(hx+tx)/2 + Number(dx.value), my=(hy+ty)/2 + Number(dy.value);
-  const len=Math.hypot(tx-hx,ty-hy);
-  const angle=Math.atan2(ty-hy,tx-hx) + Number(rot.value)*Math.PI/180;
-  const [wx,wy]=pxToWorld(mx,my);
-  model.visible=true;
-  model.position.set(wx,wy,0);
-  const factor=(len/310)*(Number(sc.value)/100);
-  model.scale.setScalar(850*factor);
-  model.rotation.set(0,Math.PI/2, -angle);
+  let len=Math.hypot(tx-hx,ty-hy); if(!isFinite(len)||len<35) return false;
+  const cx=(hx+tx)/2 + Number(dx.value), cy=(hy+ty)/2 + Number(dy.value);
+  const [wx,wy]=pxToWorld(cx,cy); const angle=Math.atan2(ty-hy,tx-hx) + Number(rot.value)*Math.PI/180;
+  model.visible=true; model.position.set(wx,wy,0);
+  model.scale.setScalar(680*(len/250)*(Number(sc.value)/100));
+  model.rotation.set(0,Math.PI/2,-angle);
+  return true;
 }
-function manualModel(){
-  if(!model) return;
-  model.visible=true;
-  model.position.set(Number(dx.value), Number(dy.value), 0);
-  model.scale.setScalar(850*(Number(sc.value)/100));
-  model.rotation.set(0,Math.PI/2, Number(rot.value)*Math.PI/180);
-}
-async function loop(){
-  if(video.readyState>=2 && poseLandmarker && video.currentTime!==lastVideoTime){
+function placeManual(){ if(!model) return; model.visible=true; model.position.set(Number(dx.value),Number(dy.value),0); model.scale.setScalar(680*(Number(sc.value)/100)); model.rotation.set(0,Math.PI/2,Number(rot.value)*Math.PI/180); }
+function loop(){
+  if(cameraReady && autoReady && poseLandmarker && video.readyState>=2 && video.currentTime!==lastVideoTime){
     lastVideoTime=video.currentTime;
-    const res=poseLandmarker.detectForVideo(video, performance.now());
-    if(res.landmarks && res.landmarks[0]){
-      const lm=res.landmarks[0];
-      const heel=lm[useRight?30:29], toe=lm[useRight?32:31], ankle=lm[useRight?28:27];
-      if(heel && toe && ankle && heel.visibility>.25 && toe.visibility>.25){
-        setModelFromPoints(heel,toe); statusEl.textContent='Pé detectado. O tênis está acompanhando posição, escala e rotação.';
-      }else{ manualModel(); statusEl.textContent='Pé incompleto na câmera. Use ajuste manual ou afaste o celular.'; }
-    }else manualModel();
-  }else if(!autoOK){ manualModel(); }
+    try{
+      const res=poseLandmarker.detectForVideo(video,performance.now());
+      const lm=res.landmarks&&res.landmarks[0];
+      if(lm){ const heel=lm[useRight?30:29], toe=lm[useRight?32:31], ankle=lm[useRight?28:27]; if(placeByFoot(heel,toe,ankle)){ setStatus('Pé detectado. O tênis acompanha posição, escala e rotação.','ok'); } else { placeManual(); setStatus('Pé incompleto na câmera. Afaste o celular ou use ajuste manual.'); } }
+      else { placeManual(); setStatus('Nenhum pé/corpo detectado. Enquadre o pé inteiro.'); }
+    }catch(e){ placeManual(); }
+  } else if(cameraReady) placeManual();
   renderer.render(scene,camera); requestAnimationFrame(loop);
 }
+requestAnimationFrame(loop);
 </script>
-</body></html>
+</body>
+</html>
