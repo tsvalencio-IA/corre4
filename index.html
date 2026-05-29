@@ -3,59 +3,47 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Olympikus Corre 4 • 3D 360 AR</title>
+<title>Olympikus Corre 4 • 3D GLB</title>
 <meta name="theme-color" content="#07111f" />
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#07111f;--card:#0d1a2d;--card2:#101f35;--line:rgba(255,255,255,.12);--text:#f2f7ff;--muted:#9fb2c9;--gold:#f5c437;--gold2:#c58e12;--red:#b20718;--red2:#750511;--soft:#14243b;}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{min-height:100%;background:radial-gradient(circle at 50% -20%,#183251 0,#07111f 48%,#040910 100%);font-family:Montserrat,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
-body{padding:clamp(10px,2vw,24px);overflow-x:hidden}
-.app{max-width:980px;margin:0 auto 40px}.product-card{border:1px solid rgba(170,200,240,.17);border-radius:34px;background:linear-gradient(160deg,rgba(15,30,51,.94),rgba(6,15,29,.95));box-shadow:0 26px 90px rgba(0,0,0,.44);padding:clamp(16px,3vw,34px);overflow:hidden;position:relative}.product-card:before{content:"";position:absolute;inset:-180px -160px auto auto;width:470px;height:470px;border-radius:50%;background:radial-gradient(circle,rgba(245,196,55,.1),transparent 66%);pointer-events:none}.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;position:relative;z-index:2}.title h1{font-size:clamp(34px,6vw,64px);letter-spacing:-.045em;line-height:.95;margin:0 0 10px}.title p{font-size:clamp(17px,3vw,28px);color:#aab8cc;font-weight:650}.share{width:70px;height:70px;border-radius:24px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.13);display:grid;place-items:center;font-size:30px;color:#fff}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 0;position:relative;z-index:3}.btn{appearance:none;border:0;border-radius:18px;background:#16263d;color:var(--text);font-weight:900;font-size:17px;min-height:54px;padding:0 22px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);cursor:pointer}.btn.gold{background:linear-gradient(#ffdc54,#d19a12);color:#17110a}.btn.small{min-height:44px;padding:0 16px;font-size:14px}.viewer-shell{margin-top:18px;border:1px solid rgba(255,255,255,.12);border-radius:30px;background:radial-gradient(circle at 50% 18%,#163152 0,#091627 62%,#050b13 100%);height:min(72vw,650px);min-height:430px;position:relative;overflow:hidden}model-viewer{width:100%;height:100%;--poster-color:transparent;background:transparent}.viewer-pill{position:absolute;z-index:8;top:22px;left:50%;transform:translateX(-50%);border-radius:999px;padding:12px 22px;background:rgba(7,14,25,.5);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(12px);font-weight:700;color:#cfd9e8;white-space:nowrap}.full{position:absolute;z-index:9;top:24px;right:26px;width:54px;height:54px;border:0;border-radius:17px;background:rgba(6,13,24,.38);color:white;font-size:25px}.hint{position:absolute;z-index:8;left:50%;bottom:130px;transform:translateX(-50%);display:flex;gap:10px;align-items:center;background:rgba(7,14,25,.55);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:12px 20px;color:#cbd7e6;font-weight:750;white-space:nowrap}.thumbs{position:absolute;z-index:9;left:22px;right:22px;bottom:22px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.thumb{height:96px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:#0c192b;overflow:hidden;cursor:pointer}.thumb.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(245,196,55,.45),0 0 28px rgba(245,196,55,.13)}.thumb img{width:100%;height:100%;object-fit:cover;display:block}.tabs{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 18px}.tab{border:0;border-radius:20px;background:#16263d;color:#edf4ff;font-weight:950;font-size:clamp(16px,2.4vw,25px);padding:18px 26px;cursor:pointer}.tab.active{background:linear-gradient(#ffdc54,#d19a12);color:#161006}.info{border:1px solid rgba(255,255,255,.10);border-radius:28px;background:linear-gradient(150deg,rgba(16,31,52,.80),rgba(8,17,31,.82));padding:clamp(20px,3vw,30px);display:grid;grid-template-columns:1fr auto;align-items:center;gap:20px}.eyebrow{font-size:13px;color:#90a5bf;letter-spacing:.25em;font-weight:950;margin-bottom:12px}.info h2{font-size:clamp(28px,4vw,40px);margin:0 0 12px}.info p{font-size:clamp(17px,2.3vw,24px);line-height:1.5;color:#dce7f4;font-weight:600;max-width:760px}.icon{width:130px;height:130px}.status{margin-top:16px;border:1px dashed rgba(255,255,255,.15);border-radius:18px;padding:14px 16px;color:#c9d6e7;background:rgba(0,0,0,.15);font-size:13px;line-height:1.5}.foot{text-align:center;color:#8ea0b8;margin:24px 0 0;font-size:13px;font-weight:700}
-.hotspot{width:30px;height:30px;border-radius:50%;border:3px solid rgba(255,255,255,.9);background:#fff;box-shadow:0 0 0 10px rgba(255,255,255,.12),0 10px 20px rgba(0,0,0,.35)}.hotspot.active{background:#f5c437;box-shadow:0 0 0 10px rgba(245,196,55,.18),0 10px 20px rgba(0,0,0,.35)}
-@media(max-width:720px){body{padding:10px}.product-card{border-radius:28px;padding:18px}.top{align-items:center}.share{width:58px;height:58px;border-radius:18px;font-size:24px}.viewer-shell{min-height:500px;height:74vh}.viewer-pill{top:18px;font-size:14px}.hint{bottom:110px;font-size:13px;padding:10px 14px}.thumbs{grid-template-columns:repeat(5,1fr);gap:7px;left:14px;right:14px;bottom:16px}.thumb{height:64px;border-radius:14px}.tabs{gap:10px}.tab{padding:15px 18px;border-radius:18px}.info{grid-template-columns:1fr}.icon{display:none}.toolbar .btn{flex:1}}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <main class="app">
-  <section class="product-card">
+  <section class="card hero">
     <div class="top">
       <div class="title">
         <h1>Olympikus Corre 4</h1>
-        <p>Olympikus • Corrida diária</p>
+        <div class="subtitle">GLB criado localmente • visualização 360° • AR</div>
       </div>
-      <button class="share" title="Compartilhar" id="shareBtn">⇧</button>
+      <div class="actions">
+        <a class="btn ghost" href="comparador.html">Comparador</a>
+        <a class="btn green" href="provador-pe.html">AR no pé</a>
+      </div>
     </div>
 
-    <div class="toolbar">
-      <button class="btn" id="arBtn">▣ AR</button>
-      <button class="btn gold" id="autoBtn">↻ 360 automático</button>
-      <button class="btn" id="resetBtn">Reset</button>
-      <a class="btn small" style="display:inline-flex;align-items:center;text-decoration:none" href="models/corre4_vermelho_360.glb" download>Baixar GLB</a>
-    </div>
-
-    <div class="viewer-shell" id="viewerBox">
-      <model-viewer id="shoeViewer" src="models/corre4_vermelho_360.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls touch-action="pan-y" auto-rotate rotation-per-second="35deg" shadow-intensity="1.35" exposure="1.08" environment-image="neutral" camera-orbit="70deg 70deg 6.1m" field-of-view="31deg" alt="Olympikus Corre 4 em 3D">
-        <button class="hotspot active" slot="hotspot-cabedal" data-position="0.22m 0.46m 0.18m" data-normal="0m 1m 0m" data-part="cabedal"></button>
-        <button class="hotspot" slot="hotspot-entressola" data-position="0.15m 0.02m 0.28m" data-normal="0m 1m 0m" data-part="entressola"></button>
-        <button class="hotspot" slot="hotspot-solado" data-position="0.15m -0.14m 0.25m" data-normal="0m -1m 0m" data-part="solado"></button>
-        <button class="hotspot" slot="hotspot-contraforte" data-position="-0.58m 0.32m 0.12m" data-normal="-1m 0m 0m" data-part="contraforte"></button>
+    <div class="viewer">
+      <button class="btn ghost ar-fixed" id="arBtn">▣ AR</button>
+      <div class="float-badge">↻ Visualização 360°</div>
+      <button class="fullscreen ghost" id="resetBtn">⛶</button>
+      <model-viewer id="viewer" src="models/corre4.glb" camera-controls touch-action="pan-y" auto-rotate rotation-per-second="28deg" shadow-intensity="1.1" exposure="1.0" environment-image="neutral" ar ar-modes="webxr scene-viewer quick-look" camera-orbit="35deg 68deg 0.72m" field-of-view="34deg" alt="Modelo 3D do Olympikus Corre 4">
+        <button class="hotspot" slot="hotspot-cabedal" data-position="0.00m 0.105m 0.06m" data-normal="0m 1m 0m"></button>
+        <button class="hotspot" slot="hotspot-entressola" data-position="0.05m 0.035m 0.062m" data-normal="0m 1m 0m"></button>
+        <button class="hotspot" slot="hotspot-solado" data-position="0.03m -0.025m 0.05m" data-normal="0m -1m 0m"></button>
+        <button class="hotspot" slot="hotspot-heel" data-position="-0.13m 0.085m 0.055m" data-normal="-1m 0m 0m"></button>
       </model-viewer>
-      <div class="viewer-pill">↻ Visualização 360°</div>
-      <button class="full" id="fullBtn">⛶</button>
-      <div class="hint">☝ Arraste • zoom • AR</div>
-      <div class="thumbs">
-        <button class="thumb active" data-orbit="70deg 70deg 6.1m"><img src="assets/lateral_corre.jpg" alt="Lateral"></button>
-        <button class="thumb" data-orbit="0deg 75deg 5.9m"><img src="assets/traseira_corre.jpg" alt="Traseira"></button>
-        <button class="thumb" data-orbit="180deg 75deg 5.9m"><img src="assets/topo_corre.jpg" alt="Frente"></button>
-        <button class="thumb" data-orbit="70deg 160deg 6.2m"><img src="assets/solado_corre.jpg" alt="Solado"></button>
-        <button class="thumb" data-orbit="125deg 58deg 6.1m"><img src="assets/angulo_corre.jpg" alt="Ângulo"></button>
+      <div class="viewer-hint">Arraste • zoom • AR</div>
+      <div class="thumbs" id="thumbs">
+        <button class="thumb active" data-orbit="35deg 68deg 0.72m"><img src="assets/lateral_externa.jpg" alt="lateral"></button>
+        <button class="thumb" data-orbit="-145deg 72deg 0.72m"><img src="assets/traseira.jpg" alt="traseira"></button>
+        <button class="thumb" data-orbit="90deg 15deg 0.74m"><img src="assets/topo.jpg" alt="topo"></button>
+        <button class="thumb" data-orbit="90deg 170deg 0.76m"><img src="assets/solado.jpg" alt="solado"></button>
+        <button class="thumb" data-orbit="-45deg 64deg 0.72m"><img src="assets/angulo.jpg" alt="ângulo"></button>
       </div>
     </div>
 
-    <div class="tabs">
+    <div class="tabs" id="tabs">
       <button class="tab active" data-part="cabedal">Cabedal</button>
       <button class="tab" data-part="entressola">Entressola</button>
       <button class="tab" data-part="solado">Solado</button>
@@ -67,31 +55,15 @@ body{padding:clamp(10px,2vw,24px);overflow-x:hidden}
       <div>
         <div class="eyebrow">COMPONENTE SELECIONADO</div>
         <h2 id="partTitle">Cabedal</h2>
-        <p id="partText">Cabedal vermelho em malha, com textura respirável, cadarços, lingueta e reforços laterais. É a área onde aparece o grande “CORRE”.</p>
+        <p id="partText">Parte superior vermelha com volume de malha, abertura, língua, cadarços e logo CORRE na lateral.</p>
       </div>
-      <svg class="icon" viewBox="0 0 120 120" fill="none" aria-hidden="true"><path d="M60 18v30M44 30l16-16 16 16" stroke="#f5c437" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 69l36-18 36 18-36 18-36-18Z" stroke="#f5c437" stroke-width="3"/><path d="M24 82l36 18 36-18M24 69v13M96 69v13" stroke="#f5c437" stroke-width="3" opacity=".75"/></svg>
+      <svg class="icon" viewBox="0 0 120 120" fill="none"><path d="M60 18v30M44 30l16-16 16 16" stroke="#f3c532" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 69l36-18 36 18-36 18-36-18Z" stroke="#f3c532" stroke-width="3"/><path d="M24 82l36 18 36-18M24 69v13M96 69v13" stroke="#f3c532" stroke-width="3" opacity=".75"/></svg>
     </div>
-    <div class="status"><strong>Arquivos extraídos:</strong> este sistema usa o GLB local <code>models/corre4_vermelho_360.glb</code>. Não está usando o tênis branco remoto do demo. O arquivo <code>comparador.html</code> também foi corrigido para carregar esse mesmo GLB local.</div>
+
+    <div class="note">Este GLB foi criado como modelo 3D estilizado do Corre 4, com peças nomeadas e âncoras para AR no pé. Ele não é fotogrametria milimétrica, mas é um GLB real carregado localmente, sem demo branco remoto.</div>
   </section>
-  <div class="foot">Powered by thIAguinho Soluções Digitais</div>
+  <div class="footer">Powered by thIAguinho Soluções Digitais</div>
 </main>
-<script>
-const viewer=document.getElementById('shoeViewer');
-const data={
- cabedal:['Cabedal','Cabedal vermelho em malha, com textura respirável, cadarços, lingueta e reforços laterais. É a área onde aparece o grande “CORRE”.'],
- entressola:['Entressola','Área de amortecimento e resposta. No Corre 4 vermelho, a entressola alta acompanha a linha lateral e dá o visual robusto do tênis.'],
- solado:['Solado','Parte inferior com borracha e desenho de tração. A referência mostra relevos e garras distribuídos na sola.'],
- contraforte:['Contraforte','Traseira do calcanhar com puxador e etiqueta vertical Olympikus, dando suporte e acabamento ao modelo.'],
- placa:['Placa / apoio','Área estrutural de apoio. Neste visual, o foco é a geometria da base e a estabilidade do conjunto, sem prometer placa rígida.']
-};
-function setPart(part){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.part===part));document.querySelectorAll('.hotspot').forEach(h=>h.classList.toggle('active',h.dataset.part===part));document.getElementById('partTitle').textContent=data[part][0];document.getElementById('partText').textContent=data[part][1];}
-document.querySelectorAll('.tab,.hotspot').forEach(el=>el.addEventListener('click',()=>setPart(el.dataset.part)));
-document.querySelectorAll('.thumb').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.thumb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');viewer.cameraOrbit=btn.dataset.orbit;viewer.jumpCameraToGoal&&viewer.jumpCameraToGoal();}));
-document.getElementById('arBtn').onclick=()=>viewer.activateAR&&viewer.activateAR();
-document.getElementById('resetBtn').onclick=()=>{viewer.cameraOrbit='70deg 70deg 6.1m';viewer.autoRotate=true;setPart('cabedal')};
-document.getElementById('autoBtn').onclick=()=>{viewer.autoRotate=!viewer.autoRotate;document.getElementById('autoBtn').textContent=viewer.autoRotate?'↻ 360 automático':'↻ 360 pausado'};
-document.getElementById('fullBtn').onclick=()=>document.getElementById('viewerBox').requestFullscreen&&document.getElementById('viewerBox').requestFullscreen();
-document.getElementById('shareBtn').onclick=async()=>{if(navigator.share){await navigator.share({title:'Olympikus Corre 4 3D',url:location.href}).catch(()=>{})}else{navigator.clipboard&&navigator.clipboard.writeText(location.href);alert('Link copiado')}};
-</script>
+<script src="assets/app.js"></script>
 </body>
 </html>

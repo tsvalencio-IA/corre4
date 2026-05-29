@@ -1,22 +1,57 @@
-CORRE 4 — SISTEMA 3D EXTRAÍDO E CORRIGIDO
+CORRE 4 — GLB + SISTEMA GITHUB
+===============================
 
 Arquivos principais:
-- index.html: tela principal no estilo do mockup, com 3D 360 e AR.
-- corre4.html: redireciona para index.html.
-- comparador.html: HTML comparador corrigido para carregar o GLB local.
-- models/corre4_vermelho_360.glb: modelo 3D extraído do pacote corre4_glb_3d_360.zip.
-- assets/: imagens de referência e miniaturas.
+- index.html: visualização premium 360° do Corre 4.
+- comparador.html: compara dois GLBs e permite upload local.
+- provador-pe.html: abre câmera do celular e tenta encaixar o tênis automaticamente no pé.
+- models/corre4.glb: arquivo GLB criado localmente, com peças e âncoras.
+- tools/create_corre4_glb.py: script usado para gerar o GLB novamente, caso queira ajustar.
 
-O que foi corrigido:
-- O sistema não carrega mais o tênis branco remoto do demo.
-- O GLB local está em models/corre4_vermelho_360.glb.
-- A tela principal agora aponta direto para esse GLB.
-- O comparador.html também foi alterado para usar esse mesmo GLB local.
+O QUE FOI CRIADO
+----------------
+Este pacote contém um GLB real, não apenas JSON vazio. O modelo tem geometria visível, materiais, peças nomeadas e âncoras de AR.
 
-Como subir no GitHub Pages:
-1. Envie tudo para o repositório mantendo as pastas.
-2. Abra index.html ou corre4.html.
-3. No celular, use Chrome/Android para testar o botão AR.
+Peças principais no GLB:
+- CABEDAL
+- ENTRESSOLA
+- SOLADO
+- CADARCOS
+- LINGUETA
+- CONTRAFORTE
+- PUXADOR_TRASEIRO
+- LOGO_CORRE
+- ETIQUETA_OLYMPIKUS
+- DETALHES_SOLADO
 
-Observação técnica:
-Este GLB é um modelo 3D estilizado/desenhado do Corre 4, com visual vermelho, 360 e AR. Ele é um arquivo 3D real em GLB, não foto recortada. Para ficar milimétrico como scanner profissional, somente substituindo por um GLB de fotogrametria.
+Âncoras para encaixe no pé:
+- FOOT_ANCHOR
+- TOE_ANCHOR
+- HEEL_ANCHOR
+- SOLE_CENTER
+- ANKLE_GUIDE
+- INSTEP_GUIDE
+
+COMO SUBIR NO GITHUB PAGES
+--------------------------
+1. Envie todo o conteúdo desta pasta para o repositório.
+2. Mantenha a estrutura:
+   index.html
+   comparador.html
+   provador-pe.html
+   assets/
+   models/corre4.glb
+3. Ative o GitHub Pages.
+4. Abra o link pelo Chrome do celular.
+
+AR NO PÉ
+--------
+O arquivo provador-pe.html usa câmera + Three.js + MediaPipe Pose.
+Ele tenta detectar calcanhar e ponta do pé e posicionar o GLB automaticamente.
+Se o detector não carregar no navegador, o modo manual continua funcionando com controles de escala, altura, horizontal e rotação.
+
+VERDADE TÉCNICA
+---------------
+Este GLB é um modelo procedural/estilizado gerado localmente. Ele é melhor que JSON vazio e já funciona em model-viewer/Three.js, mas ainda não é uma fotogrametria perfeita como um modelo feito por scanner profissional ou modelador 3D humano em Blender. A vantagem é que agora existe um GLB real no pacote, com malha, materiais e âncoras.
+
+Powered by thIAguinho Soluções Digitais

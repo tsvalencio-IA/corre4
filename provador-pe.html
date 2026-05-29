@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Provador no Pé • Corre 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.158.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body class="ar-page">
+<div class="video-wrap">
+  <video id="video" playsinline autoplay muted></video>
+  <canvas id="overlay"></canvas>
+</div>
+<div class="top-ui"><h1>AR no pé • Corre 4</h1><a class="btn ghost" href="index.html">Voltar</a></div>
+<div class="ar-ui">
+  <div class="ar-panel">
+    <div class="ar-row">
+      <button class="green" id="startBtn">Iniciar câmera</button>
+      <button id="footBtn">Pé direito</button>
+      <button id="shotBtn">Foto</button>
+      <button class="gold" id="centerBtn">Centralizar</button>
+    </div>
+    <p class="note" id="status">Ao iniciar, a câmera tenta detectar tornozelo, calcanhar e ponta do pé. Se o navegador não liberar IA, o modo manual continua funcionando.</p>
+  </div>
+  <div class="ar-panel">
+    <label>Escala <input id="scale" type="range" min="40" max="180" value="100"></label>
+    <label>Altura <input id="dy" type="range" min="-120" max="120" value="0"></label>
+    <label>Horizontal <input id="dx" type="range" min="-160" max="160" value="0"></label>
+    <label>Rotação <input id="rot" type="range" min="-80" max="80" value="0"></label>
+  </div>
+</div>
+<script type="module">
+import { PoseLandmarker, FilesetResolver } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22-rc.20250304';
+const video=document.getElementById('video'), canvas=document.getElementById('overlay'), statusEl=document.getElementById('status');
+const startBtn=document.getElementById('startBtn'), footBtn=document.getElementById('footBtn'), shotBtn=document.getElementById('shotBtn'), centerBtn=document.getElementById('centerBtn');
+const dx=document.getElementById('dx'), dy=document.getElementById('dy'), sc=document.getElementById('scale'), rot=document.getElementById('rot');
+let useRight=true, poseLandmarker=null, lastVideoTime=-1, model=null, autoOK=false;
+const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true, preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-innerWidth/2, innerWidth/2, innerHeight/2, -innerHeight/2, -1000, 1000);
+camera.position.z=10;
+scene.add(new THREE.HemisphereLight(0xffffff,0x223355,2.3));
+const light=new THREE.DirectionalLight(0xffffff,2); light.position.set(2,5,5); scene.add(light);
+const loader=new THREE.GLTFLoader();
+loader.load('models/corre4.glb', gltf=>{
+  model=gltf.scene; model.rotation.x = 0; model.rotation.y = Math.PI/2; model.rotation.z = 0; model.scale.setScalar(850); model.visible=false; scene.add(model);
+}, undefined, err=>{ statusEl.textContent='Erro ao carregar models/corre4.glb: '+err.message; });
+function resize(){
+  const w=innerWidth,h=innerHeight; renderer.setSize(w,h,false); camera.left=-w/2; camera.right=w/2; camera.top=h/2; camera.bottom=-h/2; camera.updateProjectionMatrix();
+}
+addEventListener('resize',resize); resize();
+footBtn.onclick=()=>{useRight=!useRight; footBtn.textContent=useRight?'Pé direito':'Pé esquerdo'};
+centerBtn.onclick=()=>{dx.value=0;dy.value=0;rot.value=0;sc.value=100};
+shotBtn.onclick=()=>{const a=document.createElement('a'); a.download='corre4-ar-pe.png'; a.href=canvas.toDataURL('image/png'); a.click();};
+startBtn.onclick=start;
+async function start(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}, width:{ideal:1280}, height:{ideal:720}}, audio:false});
+    video.srcObject=stream; await video.play();
+    statusEl.textContent='Câmera ativa. Carregando detector de pose...';
+    try{
+      const vision=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22-rc.20250304/wasm');
+      poseLandmarker=await PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task'},runningMode:'VIDEO',numPoses:1});
+      autoOK=true; statusEl.textContent='Detector ativo. Aponte a câmera para o pé inteiro.';
+    }catch(e){autoOK=false; statusEl.textContent='Detector não carregou. Use ajuste manual com o tênis centralizado.';}
+    requestAnimationFrame(loop);
+  }catch(e){statusEl.textContent='Câmera bloqueada: '+e.message;}
+}
+function pxToWorld(x,y){return [x-innerWidth/2, innerHeight/2-y];}
+function setModelFromPoints(heel, toe){
+  if(!model) return;
+  const hx=heel.x*innerWidth, hy=heel.y*innerHeight, tx=toe.x*innerWidth, ty=toe.y*innerHeight;
+  const mx=(hx+tx)/2 + Number(dx.value), my=(hy+ty)/2 + Number(dy.value);
+  const len=Math.hypot(tx-hx,ty-hy);
+  const angle=Math.atan2(ty-hy,tx-hx) + Number(rot.value)*Math.PI/180;
+  const [wx,wy]=pxToWorld(mx,my);
+  model.visible=true;
+  model.position.set(wx,wy,0);
+  const factor=(len/310)*(Number(sc.value)/100);
+  model.scale.setScalar(850*factor);
+  model.rotation.set(0,Math.PI/2, -angle);
+}
+function manualModel(){
+  if(!model) return;
+  model.visible=true;
+  model.position.set(Number(dx.value), Number(dy.value), 0);
+  model.scale.setScalar(850*(Number(sc.value)/100));
+  model.rotation.set(0,Math.PI/2, Number(rot.value)*Math.PI/180);
+}
+async function loop(){
+  if(video.readyState>=2 && poseLandmarker && video.currentTime!==lastVideoTime){
+    lastVideoTime=video.currentTime;
+    const res=poseLandmarker.detectForVideo(video, performance.now());
+    if(res.landmarks && res.landmarks[0]){
+      const lm=res.landmarks[0];
+      const heel=lm[useRight?30:29], toe=lm[useRight?32:31], ankle=lm[useRight?28:27];
+      if(heel && toe && ankle && heel.visibility>.25 && toe.visibility>.25){
+        setModelFromPoints(heel,toe); statusEl.textContent='Pé detectado. O tênis está acompanhando posição, escala e rotação.';
+      }else{ manualModel(); statusEl.textContent='Pé incompleto na câmera. Use ajuste manual ou afaste o celular.'; }
+    }else manualModel();
+  }else if(!autoOK){ manualModel(); }
+  renderer.render(scene,camera); requestAnimationFrame(loop);
+}
+</script>
+</body></html>
